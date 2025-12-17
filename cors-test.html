@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORSflare Proxy Tester</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-test {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-test:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-clear {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .btn-clear:hover {
+            background: #e0e0e0;
+        }
+
+        .response-container {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .response-container.show {
+            display: block;
+        }
+
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .response-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .response-content {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #333;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .examples {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .examples h3 {
+            color: #856404;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .examples ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .examples li {
+            color: #856404;
+            font-size: 13px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .examples li:hover {
+            background: rgba(255, 193, 7, 0.2);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 CORSflare Proxy Tester</h1>
+        <p class="subtitle">Test your CORS proxy and bypass restrictions</p>
+
+        <div class="input-group">
+            <label for="workerUrl">Worker URL (Your CORSflare Proxy)</label>
+            <input 
+                type="text" 
+                id="workerUrl" 
+                placeholder="https://corsflare-proxy.your-subdomain.workers.dev"
+                value="https://corsflare-production.codeinsane.workers.dev"
+            >
+        </div>
+
+        <div class="input-group">
+            <label for="targetUrl">Target API URL (URL to test)</label>
+            <input 
+                type="text" 
+                id="targetUrl" 
+                placeholder="https://api.example.com/data"
+                value="https://jsonplaceholder.typicode.com/posts/1"
+            >
+        </div>
+
+        <div class="input-group">
+            <label for="method">HTTP Method</label>
+            <select id="method">
+                <option value="GET">GET</option>
+                <option value="POST">POST</option>
+                <option value="PUT">PUT</option>
+                <option value="DELETE">DELETE</option>
+            </select>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-test" onclick="testCORS()">🧪 Test CORS Proxy</button>
+            <button class="btn-clear" onclick="clearResults()">🗑️ Clear Results</button>
+        </div>
+
+        <div class="examples">
+            <h3>📝 Example APIs to Test:</h3>
+            <ul>
+                <li onclick="setExample('https://jsonplaceholder.typicode.com/posts/1')">
+                    JSONPlaceholder - Get Post
+                </li>
+                <li onclick="setExample('https://api.github.com/users/github')">
+                    GitHub API - Get User
+                </li>
+                <li onclick="setExample('https://api.coindesk.com/v1/bpi/currentprice.json')">
+                    CoinDesk - Bitcoin Price
+                </li>
+                <li onclick="setExample('https://dog.ceo/api/breeds/image/random')">
+                    Dog API - Random Dog Image
+                </li>
+            </ul>
+        </div>
+
+        <div id="responseContainer" class="response-container">
+            <div class="response-header">
+                <span class="response-title">Response:</span>
+                <span id="statusBadge" class="status-badge"></span>
+            </div>
+            <div id="responseContent" class="response-content"></div>
+        </div>
+
+        <div class="footer">
+            Made with ❤️ using <a href="https://workers.cloudflare.com" target="_blank">Cloudflare Workers</a>
+        </div>
+    </div>
+
+    <script>
+        function setExample(url) {
+            document.getElementById('targetUrl').value = url;
+        }
+
+        function clearResults() {
+            document.getElementById('responseContainer').classList.remove('show');
+            document.getElementById('responseContent').textContent = '';
+        }
+
+        async function testCORS() {
+            const workerUrl = document.getElementById('workerUrl').value.trim();
+            const targetUrl = document.getElementById('targetUrl').value.trim();
+            const method = document.getElementById('method').value;
+            const responseContainer = document.getElementById('responseContainer');
+            const responseContent = document.getElementById('responseContent');
+            const statusBadge = document.getElementById('statusBadge');
+
+            // Validation
+            if (!workerUrl) {
+                alert('Please enter your Worker URL');
+                return;
+            }
+
+            if (!targetUrl) {
+                alert('Please enter a Target URL to test');
+                return;
+            }
+
+            // Show loading
+            responseContainer.classList.add('show');
+            responseContent.innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>';
+
+            try {
+                // Build proxy URL
+                const proxyUrl = `${workerUrl}?url=${encodeURIComponent(targetUrl)}`;
+                
+                // Start timing
+                const startTime = performance.now();
+
+                // Make request
+                const response = await fetch(proxyUrl, {
+                    method: method,
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                });
+
+                // End timing
+                const endTime = performance.now();
+                const duration = (endTime - startTime).toFixed(2);
+
+                // Get response data
+                const contentType = response.headers.get('content-type');
+                let data;
+
+                if (contentType && contentType.includes('application/json')) {
+                    data = await response.json();
+                } else {
+                    data = await response.text();
+                }
+
+                // Display results
+                const isSuccess = response.ok;
+                statusBadge.textContent = `${response.status} ${response.statusText} (${duration}ms)`;
+                statusBadge.className = `status-badge ${isSuccess ? 'status-success' : 'status-error'}`;
+
+                const formattedData = typeof data === 'object' 
+                    ? JSON.stringify(data, null, 2) 
+                    : data;
+
+                responseContent.textContent = `✅ CORS Proxy Success!\n\n` +
+                    `Request URL: ${proxyUrl}\n` +
+                    `Target URL: ${targetUrl}\n` +
+                    `Method: ${method}\n` +
+                    `Status: ${response.status} ${response.statusText}\n` +
+                    `Duration: ${duration}ms\n` +
+                    `Content-Type: ${contentType || 'N/A'}\n\n` +
+                    `Response Data:\n${'-'.repeat(50)}\n${formattedData}`;
+
+            } catch (error) {
+                statusBadge.textContent = 'ERROR';
+                statusBadge.className = 'status-badge status-error';
+                responseContent.textContent = `❌ Request Failed!\n\n` +
+                    `Error: ${error.message}\n\n` +
+                    `This could mean:\n` +
+                    `1. Worker URL is incorrect\n` +
+                    `2. Target URL is unreachable\n` +
+                    `3. Network connection issue\n` +
+                    `4. CORS still being blocked (check Worker deployment)\n\n` +
+                    `Debug Info:\n${'-'.repeat(50)}\n${error.stack || error}`;
+            }
+        }
+
+        // Test on page load with default values
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('CORSflare Proxy Tester loaded successfully!');
+        });
+    </script>
+</body>
+</html>

@@ -45,6 +45,38 @@ fetch('https://corsflare-proxy.your-subdomain.workers.dev?url=https://api.exampl
   .catch(error => console.error('Error:', error));
 ```
 
+## 🧪 Testing
+
+### Method 1: Use Built-in Test Page
+
+Open `cors-test.html` in your browser to test your CORS proxy with a beautiful UI:
+
+1. Open `cors-test.html` in any web browser
+2. Enter your Worker URL
+3. Enter the API URL you want to test
+4. Click "Test CORS Proxy"
+5. See the results instantly!
+
+**Features of the test page:**
+- 🎨 Beautiful and responsive UI
+- 🚀 Real-time response display
+- 📊 Shows status code and response time
+- 📝 Pre-loaded example APIs to test
+- 🔄 Support all HTTP methods
+
+### Method 2: Quick Browser Test
+
+Simply visit:
+```
+https://your-worker.workers.dev?url=https://jsonplaceholder.typicode.com/posts/1
+```
+
+### Method 3: cURL Command
+
+```bash
+curl "https://your-worker.workers.dev?url=https://api.example.com/data"
+```
+
 ## 🛠️ Manual Deployment
 
 1. Clone this repository:
