@@ -1,0 +1,16 @@
+{
+  "name": "corsflare-proxy",
+  "version": "1.0.0",
+  "description": "CORS Proxy powered by Cloudflare Workers",
+  "main": "worker.js",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev"
+  },
+  "keywords": ["cors", "proxy", "cloudflare", "workers"],
+  "author": "Natthasath Saksupanara",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^4.55.0"
+  }
+}
