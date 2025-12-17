@@ -1,5 +1,5 @@
-# 🎉 Cloudflare Worker CORSflare Template
-A minimal Cloudflare Workers template for handling CORS correctly. Includes preflight support, configurable headers, and sane defaults to stop browser tantrums before they start.
+# 🎉 Cloudflare Worker CORSflare
+A minimal Cloudflare Workers for handling CORS correctly. Includes preflight support, configurable headers, and sane defaults to stop browser tantrums before they start.
 
 ![version](https://img.shields.io/badge/version-1.0-blue)
 ![rating](https://img.shields.io/badge/rating-★★★★★-yellow)
@@ -16,7 +16,7 @@ A minimal Cloudflare Workers template for handling CORS correctly. Includes pref
 
 Click the button below to deploy your own instance:
 
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/natthasath/cloudflare-worker-corsflare-template)
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/natthasath/cloudflare-worker-corsflare)
 
 ## 📖 Usage
 
